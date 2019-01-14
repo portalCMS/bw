@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67GDLiveGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		api_bet67_gdlive_gameinfo(id,betId,betTime,betMoney,gameId,betResult,userName,gameType,subBetType,startBalance,openDetail,state)
+		values
+		(#{id},#{betId},#{betTime},#{gameId},#{betMoney},#{betResult},#{userName},#{gameType},#{subBetType},#{startBalance},#{openDetail},#{state})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		api_bet67_gdlive_gameinfo(id,betId,betTime,betMoney,gameId,betResult,userName,gameType,subBetType,startBalance,openDetail,state)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.id},#{item.betId},#{item.betTime},#{item.betMoney},#{item.gameId},#{item.betResult},#{item.userName},#{item.gameType},#{item.subBetType},#{item.startBalance},#{item.openDetail},#{item.state})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_gdlive_gameinfo where betId=#{betId}
+	</delete>
+	
+		<!--根据主键查询单条记录 -->
+	<select id="count" resultType="int" parameterType="hashmap">
+		select count(*) from api_bet67_gdlive_gameinfo where id=#{id}
+	</select>
+</mapper>

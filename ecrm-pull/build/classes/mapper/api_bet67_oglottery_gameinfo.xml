@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67OGLotteryGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		api_bet67_oglottery_gameinfo(id,betId,userName,gameName,betTime,phaseNum,betAmount,winOrLoss,betTypeName,betStatus)
+		values
+		(#{id},#{betId},#{userName},#{gameName},#{betTime},#{phaseNum},#{betAmount},#{winOrLoss},#{betTypeName},#{betStatus})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		api_bet67_oglottery_gameinfo(id,betId,userName,gameName,betTime,phaseNum,betAmount,winOrLoss,betTypeName,betStatus)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.id},#{item.betId},#{item.userName},#{item.gameName},#{item.betTime},#{item.phaseNum},#{item.betAmount},#{item.winOrLoss},#{item.betTypeName},#{item.betStatus})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_oglottery_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--通过实体字段查询记录 -->
+	<select id="selectByEntity" parameterType="hashmap" resultType="hashmap">
+		select * from api_bet67_oglottery_gameinfo
+		<where>
+			1 = 1
+			<if test="betStatus != null"> and betStatus = #{betStatus}</if>
+		</where>
+	</select>
+	
+	<delete id="deleteBetting" parameterType="hashmap">
+		delete from betting_bet67_oglottery where betId=#{betId}
+	</delete>
+	
+	<delete id="deleteWinlost" parameterType="hashmap">
+		delete from betting_all_game_winlose_detail where platformtype = 'OGCP' AND gametype='BET67OGCP' AND platformid=#{betId}
+	</delete>
+	
+	<!--根据主键查询单条记录 -->
+	<select id="count" resultType="int" parameterType="hashmap">
+		select count(*) from api_bet67_oglottery_gameinfo where id=#{id}
+	</select>
+</mapper>

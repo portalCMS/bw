@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67TSSportGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		api_bet67_tssport_gameinfo(id,betId,isNormalWager,playTypeName,userName,matchName,eventName,matchDate,betTypeName,teamBetName,betTime,wagerOdds,wagerStake,validAmount,winAmt,score,betStatus,remark,handicap,billTime,isBill,betDetail)
+		values
+		(#{id},#{betId},#{isNormalWager},#{playTypeName},#{userName},#{matchName},#{eventName},#{matchDate},#{betTypeName},#{teamBetName},#{betTime},#{wagerOdds},#{wagerStake},#{validAmount},#{winAmt},#{score},#{betStatus},#{remark},#{handicap},#{billTime},#{isBill},#{betDetail})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		api_bet67_tssport_gameinfo(returnTime,id,betId,isNormalWager,playTypeName,userName,matchName,eventName,matchDate,betTypeName,teamBetName,betTime,wagerOdds,wagerStake,validAmount,winAmt,score,betStatus,remark,handicap,billTime,isBill,betDetail)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.returnTime},#{item.id},#{item.betId},#{item.isNormalWager},#{item.playTypeName},#{item.userName},#{item.matchName},#{item.eventName},#{item.matchDate},#{item.betTypeName},#{item.teamBetName},#{item.betTime},#{item.wagerOdds},#{item.wagerStake},#{item.validAmount},#{item.winAmt},#{item.score},#{item.betStatus},#{item.remark},#{item.handicap},#{item.billTime},#{item.isBill},#{item.betDetail})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_tssport_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--通过实体字段查询记录 -->
+	<select id="selectByEntity" parameterType="hashmap" resultType="hashmap">
+		select * from api_bet67_tssport_gameinfo
+		<where>
+			1 = 1
+			<if test="isBill != null">	and isBill = #{isBill}</if>
+			<if test="id != null">and id = #{id}</if>
+			<if test="betId != null">and betId = #{betId}</if>
+		</where>
+	</select>
+	
+	<delete id="deleteBetting" parameterType="hashmap">
+		delete from betting_bet67_tssport where betId=#{betId}
+	</delete>
+	
+	<delete id="deleteWinlost" parameterType="hashmap">
+		delete from betting_all_game_winlose_detail where platformtype = 'TS' AND gametype='BET67TSTY' AND platformid=#{betId}
+	</delete>
+	
+	<update id="update" parameterType="hashmap">
+		update api_bet67_tssport_gameinfo
+		<set>
+			<if test="id != null">id = #{id},</if>
+		</set>
+		where betId=#{betId}
+	</update>
+	
+	<!-- 查询最大的ID -->
+	<select id="maxId" resultType="String" parameterType="hashmap">
+		select max(a.id) from api_bet67_tssport_gameinfo a
+	</select>
+</mapper>

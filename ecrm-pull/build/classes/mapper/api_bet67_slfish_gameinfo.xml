@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67SLFishGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		api_bet67_slfish_gameinfo(id,betId,desNo,betMoney,round,betResult,userName,gameCode,betRgn,chipLeft,betTime,openAnswer,openDetail,bSuccess,score,betStatus)
+		values
+		(#{id},#{betId},#{desNo},#{betMoney},#{round},#{betResult},#{userName},#{gameCode},#{betRgn},#{chipLeft},#{betTime},#{openAnswer},#{openDetail},#{bSuccess})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		api_bet67_slfish_gameinfo(id,betId,desNo,betMoney,round,betResult,userName,gameCode,betRgn,chipLeft,betTime,openAnswer,openDetail,bSuccess)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.id},#{item.betId},#{item.desNo},#{item.betMoney},#{item.round},#{item.betResult},#{item.userName},#{item.gameCode},#{item.betRgn},#{item.chipLeft},#{item.betTime},#{item.openAnswer},#{item.openDetail},#{item.bSuccess})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_slfish_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--根据主键查询单条记录 -->
+	<select id="count" resultType="int" parameterType="hashmap">
+		select count(*) from api_bet67_slfish_gameinfo where id=#{id}
+	</select>
+</mapper>

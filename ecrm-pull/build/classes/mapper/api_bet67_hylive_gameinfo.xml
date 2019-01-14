@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67HYLiveGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into api_bet67_hylive_gameinfo(id,betId,userName,gameRoundId,gameTypeName,betTime,betAmount,validAmount,winOrLoss,betTypeName,gameResult,tableName,billTime,isBill,betBefore,billAfter) values 
+		 (#{id},#{betId},#{userName},#{gameRoundId},#{gameTypeName},#{betTime},#{betAmount},#{validAmount},#{winOrLoss},#{betTypeName},#{gameResult},#{tableName},#{billTime},#{isBill},#{betBefore},#{billAfter})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into api_bet67_hylive_gameinfo(id,betId,userName,gameRoundId,gameTypeName,betTime,betAmount,validAmount,winOrLoss,betTypeName,gameResult,tableName,billTime,isBill,betBefore,billAfter) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.id},#{item.betId},#{item.userName},#{item.gameRoundId},#{item.gameTypeName},#{item.betTime},#{item.betAmount},#{item.validAmount},#{item.winOrLoss},#{item.betTypeName},#{item.gameResult},#{item.tableName},#{item.billTime},#{item.isBill},#{item.betBefore},#{item.billAfter})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_hylive_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--根据主键查询单条记录 -->
+	<select id="count" resultType="int" parameterType="hashmap">
+		select count(*) from api_bet67_hylive_gameinfo where id=#{id}
+	</select>
+</mapper>

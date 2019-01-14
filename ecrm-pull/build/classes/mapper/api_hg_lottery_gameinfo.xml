@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiHGGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		`api_hg_live_gameinfo` (
+			betId,
+			gameId,
+			userName,
+			regionId,
+			betTypeName,
+			betSlip,
+			betAmount,
+			winOrLoss,
+			betTime,
+			updateTime) 
+		VALUES (#{BetId},#{GameId},#{AccountId},#{TableId},#{GameType},#{BetSpot}, #{BetAmount},#{Payout},#{BetStartDate},#{BetEndDate})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		`api_hg_live_gameinfo` 
+		(
+			betId,
+			gameId,
+			userName,
+			regionId,
+			betTypeName,
+			betSlip,
+			betAmount,
+			winOrLoss,
+			betTime,
+			updateTime
+		) 
+		values
+		<foreach item="item" index="index" collection="list" separator=",">
+		(
+		  #{item.BetId,jdbcType=VARCHAR},
+		  #{item.GameId,jdbcType=VARCHAR},
+		  #{item.AccountId,jdbcType=VARCHAR},
+		  #{item.TableId,jdbcType=VARCHAR},
+		  #{item.GameType,jdbcType=VARCHAR},
+		  #{item.BetSpot,jdbcType=VARCHAR},
+		  #{item.BetAmount,jdbcType=VARCHAR},
+		  #{item.Payout,jdbcType=VARCHAR},
+		  #{item.BetStartDate,jdbcType=VARCHAR},
+		  #{item.BetEndDate,jdbcType=VARCHAR}
+		 )
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_hg_live_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--通过实体字段查询记录 -->
+	<select id="selectByEntity" parameterType="hashmap" resultType="hashmap">
+		select * from api_hg_live_gameinfo
+		<where>
+			1 = 1
+			<if test="Status != null"> and Status = #{Status}</if>
+			<if test="betId != null"> and betId = #{betId}</if>
+		</where>
+	</select>
+	
+	<delete id="deleteBetting" parameterType="hashmap">
+		delete from api_hg_live_gameinfo where betId=#{betId}
+	</delete>
+	
+	<delete id="deleteWinlost" parameterType="hashmap">
+		delete from betting_all_game_winlose_detail where platformtype = 'KGL' AND gametype='HGGame' AND platformid=#{betId}
+	</delete>
+</mapper>

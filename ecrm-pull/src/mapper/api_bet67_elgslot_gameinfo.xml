@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hy.pull.mapper.ApiBet67ELGSlotGameinfoMapper">
+	<!--插入记录 -->
+	<insert id="insert" parameterType="hashmap">
+		replace into
+		api_bet67_elgslot_gameinfo(id,userName,betId,gameCode,gameName,betTime,betMoney,validAmount,winOrLoss,betBefore,billBefore,isBill)
+		values
+		(#{id},#{userName},#{betId},#{gameCode},#{gameName},#{betTime},#{betMoney},#{validAmount},#{winOrLoss},#{betBefore},#{billBefore},#{isBill})
+	</insert>
+
+	<!--批量插入记录 -->
+	<insert id="batchInsert" parameterType="list">
+		replace into
+		api_bet67_elgslot_gameinfo(returnTime,id,userName,betId,gameCode,gameName,betTime,betMoney,validAmount,winOrLoss,betBefore,billBefore,isBill)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.returnTime},#{item.id},#{item.userName},#{item.betId},#{item.gameCode},#{item.gameName},#{item.betTime},#{item.betMoney},#{item.validAmount},#{item.winOrLoss},#{item.betBefore},#{item.billBefore},#{item.isBill})
+		</foreach>
+	</insert>
+	
+	<!--根据实体删除记录 -->
+	<delete id="delete" parameterType="hashmap">
+		delete from api_bet67_elgslot_gameinfo where betId=#{betId}
+	</delete>
+	
+	<!--通过实体字段查询记录 -->
+	<select id="selectByEntity" parameterType="hashmap" resultType="hashmap">
+		select * from api_bet67_elgslot_gameinfo
+		<where>
+			1 = 1
+			<if test="isBill != null"> and isBill = #{isBill}</if>
+			<if test="id != null">and id = #{id}</if>
+			<if test="betId != null">and betId = #{betId}</if>
+		</where>
+	</select>
+	
+	<delete id="deleteBetting" parameterType="hashmap">
+		delete from betting_bet67_elgslot where betId=#{betId}
+	</delete>
+	
+	<delete id="deleteWinlost" parameterType="hashmap">
+		delete from betting_all_game_winlose_detail where platformtype = 'ELG' AND gametype='BET67ELGDZ' AND platformid=#{betId}
+	</delete>
+	
+	<update id="update" parameterType="hashmap">
+		update api_bet67_elgslot_gameinfo
+		<set>
+			<if test="id != null">id = #{id},</if>
+		</set>
+		where betId=#{betId}
+	</update>
+	
+	<!-- 查询最大的ID -->
+	<select id="maxId" resultType="String" parameterType="hashmap">
+		select max(a.id) from api_bet67_elgslot_gameinfo a
+	</select>
+</mapper>
