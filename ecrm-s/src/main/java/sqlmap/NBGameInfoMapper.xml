@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="NBGameInfo" >
+ <resultMap id="resultMap" type="com.maven.entity.NBGameInfo" >
+    <result column="betId" property="betId" jdbcType="VARCHAR" />
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="betAmount" property="betAmount" jdbcType="DECIMAL" />
+    <result column="validbet" property="validbet" jdbcType="DECIMAL" />
+    <result column="winorloss" property="winorloss" jdbcType="DECIMAL" />
+    <result column="betTime" property="betTime" jdbcType="TIMESTAMP" />
+    <result column="billTime" property="billTime" jdbcType="TIMESTAMP" />
+    <result column="sportNo" property="sportNo" jdbcType="VARCHAR" />
+    <result column="raceName" property="raceName" jdbcType="VARCHAR" />
+    <result column="macthId" property="macthId" jdbcType="VARCHAR" />
+    <result column="macthName" property="macthName" jdbcType="VARCHAR" />
+    <result column="gameType" property="gameType" jdbcType="VARCHAR" />
+    <result column="gameName" property="gameName" jdbcType="VARCHAR" />
+    <result column="optionId" property="optionId" jdbcType="VARCHAR" />
+    <result column="optionName" property="optionName" jdbcType="VARCHAR" />
+    <result column="odds" property="odds" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="VARCHAR" />
+    <result column="userName" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <insert id="addRecord" parameterType="com.maven.entity.NBGameInfo" >
+        INSERT INTO `api_nb_gameinfo` (
+			`betId`,
+			`orderNo`,
+			`betAmount`,
+			`validbet`,
+			`winorloss`,
+			`betTime`,
+			`billTime`,
+			`sportNo`,
+			`raceName`,
+			`macthId`,
+			`macthName`,
+			`gameType`,
+			`gameName`,
+			`optionId`,
+			`optionName`,
+			`odds`,
+			`userId`,
+			`userName`
+		)
+		VALUES
+			(
+				#{betId},
+				#{orderNo},
+				#{betAmount},
+				#{validbet},
+				#{winorloss},
+				#{betTime},
+				#{billTime},
+				#{sportNo},
+				#{raceName},
+				#{macthId},
+				#{macthName},
+				#{gameType},
+				#{gameName},
+				#{optionId},
+				#{optionName},
+				#{odds},
+				#{userId},
+				#{userName}
+			)
+    </insert>
+
+    <select id="selectRecord" resultMap="resultMap" parameterType="Map" >
+       select * from api_nb_gameinfo where userId=#{userId} and orderNo=#{orderNo} and betId =#{betId}
+    </select>
+
+    <update id="deleteRecord" parameterType="Map" >
+        delete from  api_nb_gameinfo  where userId=#{userId} and orderNo=#{orderNo} and betId =#{betId}
+    </update>
+
+    <update id="updateRecord" parameterType="com.maven.entity.NBGameInfo">
+        update api_nb_gameinfo set validbet=#{validbet},winorloss=#{winorloss},billTime=#{billTime} where userId=#{userId} and orderNo=#{orderNo}
+    </update>
+
+</mapper>

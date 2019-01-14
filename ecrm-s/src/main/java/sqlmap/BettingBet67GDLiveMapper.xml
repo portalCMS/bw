@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BettingBet67GDLive" >
+ 	<sql id="Base_Column_List">
+		`betId`,
+		`betTime`,
+		`gameId`,
+		`betMoney`,
+		`validAmount` AS valBetAmount,
+		`betResult`,
+		`gameType`,
+		`subBetType`,
+		`startBalance`,
+		`openDetail`,
+		`state`,
+		`userName`,
+		`enterprisecode`,
+		`brandcode`,
+		`employeecode`,
+		`parentemployeecode`,
+		`gamebigtype`,
+		`status`
+	</sql>
+	<!-- 范围查询 -->
+	<sql id="rangecondition">
+		<where>
+			<if test="teamCodes !=null and teamCodes.length > 0">
+				and (parentemployeecode in
+				<foreach collection="teamCodes" item="teamcode" separator=","
+					open="(" close=")">
+					#{teamcode}
+				</foreach>
+				<if test="teamLeaderCode != null"> or employeecode =
+					#{teamLeaderCode}
+				</if>
+				)
+			</if>
+			<if test="enterprisecode != null">and enterprisecode =
+				#{enterprisecode}
+			</if>
+			<if test="brandcode != null">and brandcode = #{brandcode} </if>
+			<if test="employeecode != null">and employeecode = #{employeecode}
+			</if>
+			<if test="parentemployeecode != null">and parentemployeecode =
+				#{parentName}
+			</if>
+			
+			<if test="loginaccount != null">and userName = #{loginaccount}</if>
+			<if test="bettingId != null">and betId = #{bettingId} </if>
+			<if test="gamblingCode != null">and gameId =#{gamblingCode}</if>
+			<if test="bettingCredits != null">and betMoney =#{bettingCredits}</if>
+			<if test="startDate !=null">and
+				betTime <![CDATA[ >= ]]>#{startDate}
+			</if>
+			<if test="endDate !=null">
+				and betTime <![CDATA[ <= ]]> #{endDate}
+			</if>
+
+			<!-- 前端查询使用 -->
+			<if test="StartDate != null">and
+				betTime <![CDATA[ >= ]]>
+				#{StartDate}
+			</if>
+			<if test="EndDate != null">and
+				betTime <![CDATA[ <= ]]>
+				#{EndDate}
+			</if>
+		</where>
+	</sql>
+	<select id="selectAll" parameterType="Map" resultType="com.maven.entity.BettingBet67GDLive">
+		select <include refid="Base_Column_List"/> from betting_bet67_gdlive
+		<include refid="rangecondition"></include>
+		<include refid="ABasic.orderby"></include>
+		<include refid="ABasic.page"></include>
+	</select>
+	<select id="selectAllCount" parameterType="Map" resultType="Long">
+		select count(1)
+		from betting_bet67_gdlive
+		<include refid="rangecondition"></include>
+	</select>
+
+	<!-- 数据统计之金额 -->
+	<select id="takeRecordCountMoney" parameterType="Map"
+		resultType="Map">
+		select count(1) count,
+		sum(betMoney) betMoney,
+		sum(betResult) betResult
+
+		from betting_bet67_gdlive
+		<include refid="rangecondition"></include>
+	</select>
+  
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Pandect">
+	<!-- =================================================新增语句================================================================ -->
+	<!-- =================================================精确查询================================================================ -->
+	<!-- 存储过程,列表-团队品牌贡献 -->
+	<select id="usp_performanceForBrand" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call usp_tn_list_team_performance_for_brand(
+		#{enterprisereport,mode=IN},
+		#{enterprisecode,mode=IN},
+		#{employeecode,mode=IN},
+		#{begintime,mode=IN},
+		#{endtime,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,列表-用户活跃度 -->
+	<select id="usp_useractivity" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call usp_tn_list_team_useractivity(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-团队余额 -->
+	<select id="usp_balance" statementType="CALLABLE" parameterType="Map" resultType="java.math.BigDecimal">
+		{call usp_tn_stat_team_balance(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-团队输赢 -->
+	<select id="usp_takeLoseWin" statementType="CALLABLE" parameterType="Map" resultType="java.math.BigDecimal">
+		{call usp_tn_stat_team_losewin(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN},
+		#{begintime,mode=IN},
+		#{endtime,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-团队存款 -->
+	<select id="usp_savemoney" statementType="CALLABLE" parameterType="Map" resultType="java.math.BigDecimal">
+		{call usp_tn_stat_team_savemoney(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN},
+		#{begintime,mode=IN},
+		#{endtime,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-团队取款 -->
+	<select id="usp_takemoney" statementType="CALLABLE" parameterType="Map" resultType="java.math.BigDecimal">
+		{call usp_tn_stat_team_takemoney(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN},
+		#{begintime,mode=IN},
+		#{endtime,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-团队贡献 -->
+	<select id="usp_performance" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call usp_tn_toplist_team_performance(
+		#{enterprisereport,mode=IN},
+		#{employeecode,mode=IN},
+		#{begintime,mode=IN},
+		#{endtime,mode=IN}
+		)}
+	</select>
+	<!-- 存储过程,总计-取款稽查 -->
+	<select id="usp_takemoney_inspect" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call usp_tn_stat_takemoney_inspect(
+		#{ordernumber,mode=IN}
+		)}
+	</select>
+	<!-- ============================== 新增功能 ============================== -->
+	<!-- 日活跃用户数,今日登陆玩家数 -->
+	<select id="dailyActiveMembers" parameterType="Map" resultType="java.math.BigDecimal">
+		<!-- SELECT  
+			COUNT(1) 
+		FROM 
+			enterprise_employee a 
+		WHERE
+		a.enterprisecode = #{enterprisecode} AND a.employeetypecode = 'T003' AND date_format(a.lastlogintime,'%Y%m%d') = date_format(now(),'%Y%m%d') -->
+	
+		SELECT COUNT(1) FROM enterprise_employee a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.employeetypecode = 'T003'
+			AND a.lastlogintime <![CDATA[ >= ]]> CURDATE()
+			AND a.lastlogintime <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+	</select>
+	<!-- 时活跃用户数 -->
+	<select id="hoursActiveMembers" parameterType="Map" resultType="java.math.BigDecimal">
+		SELECT COUNT(1) FROM enterprise_employee a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.employeetypecode = 'T003'
+			AND a.lastlogintime <![CDATA[ >= ]]> DATE_ADD(NOW(), INTERVAL -1 HOUR)
+			AND a.lastlogintime <![CDATA[ <= ]]> NOW()
+	</select>
+	<!-- 日新注册用户数 -->
+	<select id="dailyRegisteredMembers" parameterType="Map" resultType="java.math.BigDecimal">
+		SELECT COUNT(1) FROM enterprise_employee a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.employeetypecode = 'T003'
+ 			AND a.logindatetime <![CDATA[ >= ]]> CURDATE()
+			AND a.logindatetime <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 1 DAY) 
+	</select>
+	<!-- 会员总数 -->
+	<select id="totalMembers" parameterType="Map" resultType="java.math.BigDecimal">
+		SELECT COUNT(1) FROM enterprise_employee a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.employeetypecode = 'T003'
+	</select>
+	<!-- 今日存款次数 -->
+	<select id="dailyDeposits" parameterType="Map" resultType="java.math.BigDecimal">
+		SELECT COUNT(1) FROM deposit_withdraw_order a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.ordertype = 1
+			AND a.orderdate <![CDATA[ >= ]]> CURDATE()
+			AND a.orderdate <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+	</select>
+	<!-- 今日取款次数 -->
+	<select id="dailyWithdrawals" parameterType="Map" resultType="java.math.BigDecimal">
+		SELECT COUNT(1) FROM deposit_withdraw_order a
+		WHERE a.enterprisecode = #{enterprisecode} AND a.ordertype = 2
+			AND a.orderdate <![CDATA[ >= ]]> CURDATE()
+			AND a.orderdate <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+	</select>
+	<!-- 获取取款统计数据 -->
+	<select id="ups_daily_deposit_report" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call ups_daily_deposit_report(
+			#{enterprisecode,mode=IN},
+			#{out_passed,mode=OUT,jdbcType=INTEGER},
+			#{out_review,mode=OUT,jdbcType=INTEGER},
+			#{out_notpass,mode=OUT,jdbcType=INTEGER}
+		)}
+	</select>
+	<!-- 获取取款统计数据 -->
+	<select id="ups_daily_withdrawal_report" statementType="CALLABLE" parameterType="Map" resultType="Map">
+		{call ups_daily_withdrawal_report(
+			#{enterprisecode,mode=IN},
+			#{out_passed,mode=OUT,jdbcType=INTEGER},
+			#{out_review,mode=OUT,jdbcType=INTEGER},
+			#{out_notpass,mode=OUT,jdbcType=INTEGER},
+			#{out_topaid,mode=OUT,jdbcType=INTEGER}
+		)}
+	</select>
+	<!-- =================================================模糊查询================================================================ -->
+	<!-- =================================================删除语句================================================================ -->
+	<!-- =================================================修改语句================================================================ -->
+</mapper>
